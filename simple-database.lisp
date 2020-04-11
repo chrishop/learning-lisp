@@ -1,6 +1,6 @@
 (defvar *db* nil)
 
-(defun add-cds ()
+(defun add-records ()
   (loop (add-record (prompt-for-record))
     (if (not (y-or-n-p "Another? [y/n]: ")) (return))))
 
@@ -9,6 +9,18 @@
   :date date :rating rating))
 
 (defun add-record (record) (push record *db*))
+
+(defun save-db (filename)
+  (with-open-file (out filename
+                    :direction :output
+                    :if-exists :supersede)
+    (with-standard-io-syntax 
+      (print *db* out))))
+
+(defun load-db (filename)
+  (with-open-file (in filename)
+    (with-standard-io-syntax
+      (setf *db* (read in)))))
 
 (defun show-db ()
   (dolist (item *db*)
