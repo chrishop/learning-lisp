@@ -1,14 +1,12 @@
 (defvar *db* nil)
 
-(defun add-records ()
-  (loop (add-record (prompt-for-record))
-    (if (not (y-or-n-p "Another? [y/n]: ")) (return))))
+
+
+(defun add-record (record) (push record *db*))
 
 (defun make-record (title artist date rating) 
   (list :title title :artist artist 
   :date date :rating rating))
-
-(defun add-record (record) (push record *db*))
 
 (defun save-db (filename)
   (with-open-file (out filename
@@ -26,13 +24,6 @@
   (dolist (item *db*)
     (format t "~{~a:~10t~a~%~}~%" item)))
 
-(defun prompt-for-record ()
-  (make-record
-    (prompt-read "Title")
-    (prompt-read "Artist")
-    (prompt-read "Date")
-    (parse-rating (prompt-read "Rating"))))
-
 (defun parse-rating (rating)
   (or (parse-integer rating :junk-allowed t) 0))
 
@@ -40,3 +31,14 @@
   (format *query-io* "~a: " prompt)
   (force-output *query-io*)
   (read-line *query-io*))
+
+(defun prompt-for-record ()
+  (make-record
+    (prompt-read "Title")
+    (prompt-read "Artist")
+    (prompt-read "Date")
+    (parse-rating (prompt-read "Rating"))))
+
+(defun add-records ()
+  (loop (add-record (prompt-for-record))
+    (if (not (y-or-n-p "Another? [y/n]: ")) (return))))
