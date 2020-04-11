@@ -1,5 +1,9 @@
 (defvar *db* nil)
 
+(defun add-cds ()
+  (loop (add-record (prompt-for-record))
+    (if (not (y-or-n-p "Another? [y/n]: ")) (return))))
+
 (defun make-record (title artist date rating) 
   (list :title title :artist artist 
   :date date :rating rating))
